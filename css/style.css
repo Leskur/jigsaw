@@ -1,0 +1,19 @@
+.container{
+    width: 450px;
+    height: 450px;
+    background-color: rgba(0, 0, 0, .1);
+    border: 1px solid yellow;
+}
+.container div{
+    width: 150px;
+    height: 150px;
+    float: left;
+    border: 1px solid yellow;
+    background-size: cover;
+    box-sizing: border-box;
+    
+}
+/* 有背景的图片鼠标呈小手状 */
+.container div[style]{
+    cursor: pointer;
+}

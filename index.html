@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <title>JIGSAW</title>
+    <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+    <div class="container"></div>
+</body>
+
+<script>
+
+
+
+    // 容器
+    const container = document.querySelector(".container");
+    // 图片的索引
+    const indexs = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    const blank = Number(indexs.slice(-1))
+
+
+    // 随机打乱顺序（这种方法会造成拼图无法还原，感兴趣的话可搜索“不可还原的拼图”）
+    // indexs.sort((a, b) => Math.random() > .5 ? -1 : 1)
+
+    // 此方法打乱顺序可还原
+    function shuffle(num = 100) {
+        function change() {
+            let blankIndex = indexs.indexOf(blank)
+            let step = 0;
+            let changeStep;
+            switch (blankIndex % 3) {
+                case 0:
+                    changeStep = [1, -3, 3]
+                    break;
+                case 1:
+                    changeStep = [-1, 1, -3, 3]
+                    break;
+                case 2:
+                    changeStep = [-1, -3, 3]
+                    break;
+            }
+            step = changeStep.sort(() => Math.random() > .5 ? -1 : 1)[0]
+            let changeIndex = blankIndex + step
+            if (!(changeIndex < indexs.length && -1 < changeIndex)) {
+                changeIndex -= 2 * step
+            }
+            indexs[changeIndex] = [blank, indexs[blankIndex] = indexs[changeIndex]][0]
+        }
+        for (let i = 0; i < num; i++) {
+            change()
+        }
+    }
+    // 打乱100次
+    shuffle(100)
+    // 渲染
+    render()
+    // 绑定事件
+    bind()
+
+    function render() {
+        // 创建图片节点
+        indexs.forEach((item, index) => {
+            let node = document.createElement('div')
+            node.className = 'img'
+            node.setAttribute('data-index', index)
+            node.setAttribute('data-img', item)
+            // 如果是最后一张图片，那就用空白代替
+            if (item == indexs.length - 1) {
+                node.style.backgroundImage = ''
+                node.setAttribute('blank', "")
+            } else
+                node.style.backgroundImage = `url('./images/${item}.jpg')`
+            container.append(node)
+        })
+
+    }
+    // 绑定图片点击事件
+    function bind() {
+        const imgs = document.querySelectorAll('.img')
+        imgs.forEach(item => {
+            item.addEventListener('click', function () {
+                // 是否是空白图片
+                let isBlank = this.hasAttribute('blank')
+                // 点击空白图片无效果
+                if (isBlank) return
+
+                // 空白图片
+                let blank = document.querySelector('[blank]')
+                // 空白图片的索引
+                let blankIndex = blank.getAttribute('data-index')
+
+
+                // 点击的图片
+                let click = this
+                // 点击图片的索引
+                let clickIndex = this.getAttribute('data-index')
+
+                // 空白图片位于中间一列时，前1、后1、张图片都可以交换
+                // 空白图片位于左边一列时，后1张可交换、前1张不能交换
+                // 空白图片位于右边一列时，前1张可交换、后1张不能交换
+                // 实现如下
+
+
+                // 点击图片离空白图片的距离，负数代表在前边，否则在后边
+                let step = clickIndex - blankIndex;
+                // 是否可以交换
+                let canExchange = false
+                if (Math.abs(step) == 3) canExchange = true
+                // 左边一列
+                if (blankIndex % 3 == 0 && step == 1) canExchange = true
+                // 中间一列
+                if (blankIndex % 3 == 1 && Math.abs(step) == 1) canExchange = true
+                // 右边一列
+                if (blankIndex % 3 == 2 && step == -1) canExchange = true
+
+
+                // 以下下是交换图片的逻辑
+                if (canExchange) {
+                    blank.style.backgroundImage = click.style.backgroundImage;
+                    blank.removeAttribute('blank')
+                    blank.setAttribute('data-img', click.getAttribute('data-img'))
+                    click.style.backgroundImage = ''
+                    click.setAttribute('blank', '')
+                    click.setAttribute('data-img', 8)
+                }
+
+                // 检测逻辑
+                for (let i = 0; i < imgs.length; i++) {
+                    let dataIndex = imgs[i].getAttribute('data-index')
+                    let dataImg = imgs[i].getAttribute('data-img')
+                    if (dataIndex != dataImg)
+                        return false
+
+                    if (i == imgs.length - 1) {
+                        click.style.backgroundImage = `url('./images/8.jpg')`
+                        click.removeAttribute('blank')
+                        return setTimeout(() => {
+                            alert(6666666666666666)
+                        }, 100);
+                    }
+
+
+                }
+
+
+            })
+        })
+    }
+
+
+
+</script>
+
+</html>
