@@ -2,7 +2,7 @@
 
 <head>
     <title>JIGSAW</title>
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="http://qiniu.scdztlzx.com/jigsaw/css/style.css" />
 </head>
 
 <body>
@@ -70,7 +70,7 @@
                 node.style.backgroundImage = ''
                 node.setAttribute('blank', "")
             } else
-                node.style.backgroundImage = `url('./images/${item}.jpg')`
+                node.style.backgroundImage = `url('http://qiniu.scdztlzx.com/jigsaw/images/${item}.jpg')`
             container.append(node)
         })
 
@@ -133,7 +133,7 @@
                         return false
 
                     if (i == imgs.length - 1) {
-                        click.style.backgroundImage = `url('./images/8.jpg')`
+                        click.style.backgroundImage = `url('http://qiniu.scdztlzx.com/jigsaw/images/8.jpg')`
                         click.removeAttribute('blank')
                         return setTimeout(() => {
                             alert(6666666666666666)
